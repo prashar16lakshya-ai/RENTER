@@ -1,0 +1,23 @@
+:root {
+  --primary: #2563eb;
+  --card: #ffffff;
+  --bg: #f5f7fb;
+}
+
+* {
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+}
+
+button,
+input,
+select {
+  transition: all 0.18s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-1px);
+}
