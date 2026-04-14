@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SportSync | School Sports Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              bg: '#f5f7fb',
+              card: '#ffffff',
+              primary: '#2563eb',
+              primaryDark: '#1d4ed8',
+              accent: '#0ea5e9',
+              success: '#16a34a',
+              danger: '#dc2626',
+              warning: '#ca8a04'
+            },
+            boxShadow: {
+              soft: '0 10px 25px -10px rgba(30, 64, 175, 0.2)'
+            }
+          }
+        }
+      };
+    </script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="bg-bg text-slate-800">
+    <div id="loader" class="fixed inset-0 hidden items-center justify-center bg-slate-900/45 z-50">
+      <div class="bg-card rounded-xl shadow-soft px-6 py-4 flex items-center gap-3">
+        <div class="h-5 w-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+        <p class="font-medium">Loading...</p>
+      </div>
+    </div>
+
+    <div id="toastContainer" class="fixed top-4 right-4 z-50 flex flex-col gap-2"></div>
+
+    <header class="sticky top-0 z-20 bg-white/90 backdrop-blur border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="h-9 w-9 rounded-lg bg-primary text-white grid place-items-center font-bold">SS</div>
+          <div>
+            <h1 class="font-bold text-lg leading-none">SportSync</h1>
+            <p class="text-xs text-slate-500">School Sports Management</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="openAuthBtn" class="px-4 py-2 bg-primary hover:bg-primaryDark text-white rounded-lg text-sm font-semibold">Login / Sign Up</button>
+          <button id="logoutBtn" class="hidden px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-lg text-sm font-semibold">Logout</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 py-6 grid lg:grid-cols-[16rem_1fr] gap-6">
+      <aside id="sidebar" class="hidden lg:block bg-card rounded-2xl shadow-soft border border-slate-200 p-4 h-fit sticky top-24">
+        <h2 class="font-semibold text-slate-900 mb-3">Navigation</h2>
+        <nav class="space-y-1">
+          <button data-section="landing" class="nav-link w-full text-left px-3 py-2 rounded-lg bg-primary/10 text-primary font-medium">Overview</button>
+          <button data-section="manage" class="nav-link w-full text-left px-3 py-2 rounded-lg hover:bg-slate-100">Manage Teams</button>
+          <button data-section="attendance" class="nav-link w-full text-left px-3 py-2 rounded-lg hover:bg-slate-100">Track Attendance</button>
+          <button data-section="matches" class="nav-link w-full text-left px-3 py-2 rounded-lg hover:bg-slate-100">Match Results</button>
+        </nav>
+      </aside>
+
+      <main class="space-y-6">
+        <section id="landingSection">
+          <div class="bg-card rounded-2xl shadow-soft border border-slate-200 p-6">
+            <h2 class="text-2xl font-bold">Train Better. Manage Smarter.</h2>
+            <p class="mt-2 text-slate-600">Run your school's sports program with one mobile-first platform for attendance, team setup, and match updates.</p>
+          </div>
+
+          <div class="mt-6 grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+            <button data-card-action="manage" class="feature-card group text-left bg-card rounded-2xl border border-slate-200 shadow-soft p-5 hover:border-primary/50">
+              <p class="text-sm text-primary font-semibold">Operations</p>
+              <h3 class="mt-2 font-bold text-lg">Manage Teams</h3>
+              <p class="mt-2 text-sm text-slate-600">Create teams and players by sport and grade.</p>
+            </button>
+            <button data-card-action="attendance" class="feature-card group text-left bg-card rounded-2xl border border-slate-200 shadow-soft p-5 hover:border-primary/50">
+              <p class="text-sm text-primary font-semibold">Monitoring</p>
+              <h3 class="mt-2 font-bold text-lg">Track Attendance</h3>
+              <p class="mt-2 text-sm text-slate-600">Capture training/session attendance instantly.</p>
+            </button>
+            <button data-card-action="matches" class="feature-card group text-left bg-card rounded-2xl border border-slate-200 shadow-soft p-5 hover:border-primary/50">
+              <p class="text-sm text-primary font-semibold">Performance</p>
+              <h3 class="mt-2 font-bold text-lg">Match Results</h3>
+              <p class="mt-2 text-sm text-slate-600">Post scores with real-time updates and history.</p>
+            </button>
+          </div>
+        </section>
+
+        <section id="dashboardSection" class="hidden space-y-4">
+          <div class="bg-card rounded-2xl border border-slate-200 shadow-soft p-5">
+            <h2 class="text-xl font-bold">Dashboard</h2>
+            <p class="text-sm text-slate-600 mt-1">Signed in as <span id="roleBadge" class="font-semibold"></span></p>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="bg-card rounded-2xl border border-slate-200 shadow-soft p-4">
+              <h3 class="font-semibold">Teams</h3>
+              <ul id="teamList" class="mt-3 space-y-2 text-sm"></ul>
+            </div>
+            <div class="bg-card rounded-2xl border border-slate-200 shadow-soft p-4">
+              <h3 class="font-semibold">Recent Matches</h3>
+              <ul id="matchList" class="mt-3 space-y-2 text-sm"></ul>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="authModal" class="fixed inset-0 hidden items-center justify-center bg-slate-900/45 p-4 z-40">
+      <div class="bg-card rounded-2xl shadow-soft w-full max-w-md border border-slate-200 p-5">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-bold text-xl" id="authTitle">Login</h2>
+          <button id="closeAuthBtn" class="text-slate-500 hover:text-slate-700">✕</button>
+        </div>
+
+        <form id="authForm" class="space-y-3">
+          <div>
+            <label class="text-sm font-medium">Role</label>
+            <div class="grid grid-cols-3 gap-2 mt-1">
+              <button type="button" data-role="student" class="role-btn px-2 py-2 rounded-lg border border-slate-300 text-sm bg-primary/10 border-primary text-primary">Student</button>
+              <button type="button" data-role="coach" class="role-btn px-2 py-2 rounded-lg border border-slate-300 text-sm">Coach</button>
+              <button type="button" data-role="admin" class="role-btn px-2 py-2 rounded-lg border border-slate-300 text-sm">Admin</button>
+            </div>
+          </div>
+
+          <div>
+            <label for="nameInput" class="text-sm font-medium">Full Name</label>
+            <input id="nameInput" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="Alex Carter" />
+          </div>
+          <div>
+            <label for="emailInput" class="text-sm font-medium">Email</label>
+            <input id="emailInput" type="email" required class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="you@school.edu" />
+          </div>
+          <div>
+            <label for="passwordInput" class="text-sm font-medium">Password</label>
+            <input id="passwordInput" type="password" required class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="••••••••" />
+          </div>
+
+          <div id="signupDynamicFields" class="hidden space-y-3">
+            <div>
+              <label for="teamSelect" class="text-sm font-medium">Team</label>
+              <select id="teamSelect" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"></select>
+            </div>
+            <div id="playerSelectWrap">
+              <label for="playerSelect" class="text-sm font-medium">Player</label>
+              <select id="playerSelect" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"></select>
+            </div>
+            <div>
+              <label for="sportInput" class="text-sm font-medium">Sport</label>
+              <input id="sportInput" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="Basketball" />
+            </div>
+          </div>
+
+          <button id="emailSubmitBtn" type="submit" class="w-full bg-primary hover:bg-primaryDark text-white font-semibold py-2.5 rounded-lg">Continue</button>
+        </form>
+
+        <button id="googleBtn" class="w-full mt-3 border border-slate-300 hover:bg-slate-50 font-semibold py-2.5 rounded-lg">Continue with Google</button>
+
+        <p class="text-sm text-center text-slate-600 mt-3">
+          <span id="authToggleText">Don't have an account?</span>
+          <button id="toggleAuthModeBtn" class="text-primary font-semibold">Sign Up</button>
+        </p>
+      </div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+  </body>
+</html>
